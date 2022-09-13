@@ -8,11 +8,11 @@ public class Main {
 
     public static void main(String[] args) {
 
-        String svar;
+       String svar;
 
         while (true) {
 
-            svar = getString("Hvad ønsker du? opret eller udskriv");
+            svar = getString("Hvad ønsker du? opret/udskriv/slet/update");
 
             switch (svar){
 
@@ -24,9 +24,88 @@ public class Main {
                     udskriv();
                     break;
 
+                case "slet":
+                    slet();
+                    break;
+
+                case "update":
+                    update();
+                    break;
+
+                    default:
+                    System.out.println("Den fangede jeg sgu ikke lige");
+
+
             }
         }
+    }
 
+    private static void update() {
+        udskriv();
+
+        String sql = "update  Navne set navne = ?  where idNavne = ?";
+
+
+        try (Connection con = DBConnection.createConnection();
+             PreparedStatement ps = con.prepareStatement(sql);) {
+
+            String kundeNavn = getString("angiv nyt navn");
+
+            ps.setString(1, kundeNavn);
+
+
+            // det er det her jeg søger på.
+            ps.setInt(2, getInt("Skriv et tal"));
+
+
+            int res = ps.executeUpdate();    //https://javaconceptoftheday.com/difference-between-executequery-executeupdate-execute-in-jdbc/
+
+            if (res > 0) {
+
+                System.out.println("Kunden med navnet " + "\"" + kundeNavn + "\"" + " er nu blevet opdateret");
+            } else {
+
+                System.out.println("en kunde med navnet " + "\"" + kundeNavn + "\"" + " fandtes ikke i listen");
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        udskriv();
+    }
+
+    private static void slet() {
+        udskriv();
+
+        String sql = "delete from Navne where navne = ?";
+
+        try (Connection con = DBConnection.createConnection();
+             PreparedStatement ps = con.prepareStatement(sql);) {
+
+            String kundeNavn = getString("Skriv navnet på den kunde der skal slettes ");
+
+            ps.setString(1, kundeNavn);
+
+
+            int res = ps.executeUpdate();       //https://javaconceptoftheday.com/difference-between-executequery-executeupdate-execute-in-jdbc/
+
+            if (res > 0) {
+
+                System.out.println("Kunden med navnet " + "\"" + kundeNavn + "\"" + " er nu blevet slettet");
+            } else {
+
+                System.out.println("en kunde med navnet " + "\"" + kundeNavn + "\"" + " fandtes ikke i listen");
+
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        udskriv();
     }
 
     private static void indsæt() {
@@ -87,7 +166,20 @@ public class Main {
         }
     }
 
-    public static String getString(String s){
+    public static int getInt(String s){
+
+        while (true) {
+            try {
+                int ans = Integer.parseInt(getString(s));
+                return ans;
+            } catch (NumberFormatException e) {
+                System.out.println("Husk ingen tal ord");
+            }
+        }
+
+    }
+
+    public static String getString(String s) {
 
         System.out.println(s + " : ");
         Scanner scan = new Scanner(System.in);
@@ -95,9 +187,7 @@ public class Main {
         return scan.nextLine();
 
 
-
     }
-
 
 
 }
