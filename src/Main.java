@@ -1,3 +1,7 @@
+import Niveau2_logic.TerminalInput;
+import Niveau3_persistens.Facade;
+import Niveau3_persistens.Mapper;
+
 public class Main {
 
 
@@ -12,19 +16,19 @@ public class Main {
             switch (svar){
 
                 case "opret":
-                    Mapper.indsæt();
+                    Facade.indsæt();
                     break;
 
                 case "udskriv":
-                    Mapper.udskriv();
+                    Facade.udskriv();
                     break;
 
                 case "slet":
-                    Mapper.slet();
+                    Facade.slet();
                     break;
 
                 case "update":
-                    Mapper.update();
+                    Facade.update();
                     break;
 
                     default:

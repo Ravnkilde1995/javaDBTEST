@@ -1,3 +1,5 @@
+package Niveau2_logic;
+
 import java.util.Scanner;
 
 public class TerminalInput {
